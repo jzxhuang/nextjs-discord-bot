@@ -1,26 +1,21 @@
 import axios from "axios"
-import { GuildMember, Role } from "interfaces/discord"
+import { APIApplicationCommand } from "discord-api-types"
+
+const DISCORD_APP_ID = process.env.DISCORD_APP_ID
+const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN
+
+if (!DISCORD_APP_ID || !DISCORD_BOT_TOKEN) {
+  throw new Error("Environment variables not configured correctly")
+}
 
 export const discordClient = axios.create({
-  baseURL: "https://discord.com/api/v8/",
-  headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}` },
+  baseURL: "https://discord.com/api/v8",
+  headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` },
 })
 
-export const getRolesForGuild = (guildId: string) =>
-  discordClient.get<Role[]>(`guilds/${guildId}/roles`)
+export const getGlobalCommands = () =>
+  discordClient.get<APIApplicationCommand[]>(`/applications/${DISCORD_APP_ID}/commands`)
 
-export const getGuildMember = (guildId: string, userId: string) =>
-  discordClient.get<GuildMember>(`guilds/${guildId}/members/${userId}`)
-
-/**
- * Note that this does NOT preserve the user's previous roles!
- */
-export const updateRolesForMember = (
-  guildId: string,
-  userId: string,
-  roles: string[]
-) => {
-  discordClient.patch<GuildMember>(`guilds/${guildId}/members/${userId}`, {
-    roles,
-  })
-}
+export type CreateGlobalCommand = Omit<APIApplicationCommand, "id" | "application_id">
+export const createGlobalCommand = (command: CreateGlobalCommand) =>
+  discordClient.post<APIApplicationCommand>(`/applications/${DISCORD_APP_ID}/commands`, command)

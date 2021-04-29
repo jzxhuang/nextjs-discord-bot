@@ -1,9 +1,6 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 
-const handleErrors = (fn: NextApiHandler) => async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
+const handleErrors = (fn: NextApiHandler) => async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     return await fn(req, res)
   } catch (err) {

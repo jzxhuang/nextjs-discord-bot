@@ -5,7 +5,11 @@ import nacl from "tweetnacl"
 import { parseRawBodyAsString } from "utils/body-parser"
 
 // Your public key can be found on your application in the Developer Portal
-const PUBLIC_KEY = process.env.DISCORD_APP_PUBLIC_KEY || ""
+const DISCORD_APP_PUBLIC_KEY = process.env.DISCORD_APP_PUBLIC_KEY
+
+if (!DISCORD_APP_PUBLIC_KEY) {
+  throw new Error("Environment variables not configured correctly")
+}
 
 export type VerifyHeadersArgs = {
   timestamp: string
@@ -17,19 +21,13 @@ export type VerifyHeadersArgs = {
  * Verifies the headers sent from Discord according to
  * https://discord.com/developers/docs/interactions/slash-commands#security-and-authorization
  */
-export const verifyHeaders = ({
-  timestamp,
-  rawBody,
-  signature,
-}: VerifyHeadersArgs) => {
+export const verifyHeaders = ({ timestamp, rawBody, signature }: VerifyHeadersArgs) => {
   return nacl.sign.detached.verify(
     Buffer.from(timestamp + rawBody),
     Buffer.from(signature, "hex"),
-    Buffer.from(PUBLIC_KEY, "hex")
+    Buffer.from(DISCORD_APP_PUBLIC_KEY, "hex")
   )
 }
-
-// type NextApiHandler<T = any> = (req: NextApiRequest, res: NextApiResponse<T>) => void | Promise<void>
 
 /**
  * Middleware to verify the validity of the incoming webhook request according to https://discord.com/developers/docs/interactions/slash-commands#security-and-authorization
