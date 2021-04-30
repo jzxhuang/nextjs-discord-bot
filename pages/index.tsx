@@ -17,6 +17,23 @@ const IndexPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePro
     <div>
       <h1>Dashboard</h1>
       <h2>i.e. you could build a dashboard here... we'll just fetch all the slash commands the bot has registered</h2>
+      <div>
+        <a href="https://discord.gg/NmXuqGgkb3">
+          <img
+            alt="Discord invite"
+            src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"
+            style={{ borderRadius: "4px", marginRight: "16px" }}
+          />
+        </a>
+        <a href="https://discord.gg/NmXuqGgkb3">Try it out on this Discord server</a>
+        <p>or</p>
+        <a
+          style={{ display: "block" }}
+          href="https://discord.com/api/oauth2/authorize?client_id=837427503059435530&permissions=2147483648&scope=bot%20applications.commands"
+        >
+          Add NextBot to your server!
+        </a>
+      </div>
       {data && data.length > 0 ? (
         <div>
           <h3>All commands</h3>
