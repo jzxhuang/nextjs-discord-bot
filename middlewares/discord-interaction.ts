@@ -34,7 +34,7 @@ export const verifyHeaders = ({ timestamp, rawBody, signature }: VerifyHeadersAr
  *
  * When using this middleware, your API route handler must disable body parsing
  */
-const discordInteraction = (next: DiscordInteractionApiHandler) => async (
+const withDiscordInteraction = (next: DiscordInteractionApiHandler) => async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -69,4 +69,4 @@ const discordInteraction = (next: DiscordInteractionApiHandler) => async (
   }
 }
 
-export default discordInteraction
+export default withDiscordInteraction

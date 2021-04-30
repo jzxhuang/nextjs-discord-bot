@@ -32,6 +32,8 @@ An accompanying static web app also shows the registered commands: https://nextj
 
 ## Development
 
+Requires a Node.js version that can run Next.js.
+
 ### Setup
 
 Follow the one-time setup as follows:

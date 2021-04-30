@@ -1,9 +1,9 @@
 import axios from "axios"
 import { NextApiRequest, NextApiResponse } from "next"
 import { customAlphabet } from "nanoid"
-import { APIApplicationCommandInteraction, APIEmbed, APIInteractionResponse } from "discord-api-types/payloads/v8"
-import discordInteraction from "middlewares/discord"
-import handleErrors from "middlewares/errors"
+import { APIApplicationCommandInteraction, APIEmbed, APIInteractionResponse } from "discord-api-types/v8"
+import withDiscordInteraction from "middlewares/discord-interaction"
+import withErrorHandler from "middlewares/error-handler"
 
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz-", 16)
 
@@ -88,4 +88,4 @@ const handler = async (
   }
 }
 
-export default handleErrors(discordInteraction(handler))
+export default withErrorHandler(withDiscordInteraction(handler))
