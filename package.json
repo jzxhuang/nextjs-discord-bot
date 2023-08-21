@@ -5,25 +5,36 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "register-commands": "tsx ./scripts/register-commands"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "nanoid": "^3.1.22",
-    "next": "^10.2.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "autoprefixer": "^10.4.16",
+    "discord-api-types": "^0.37.54",
+    "dotenv": "^16.3.1",
+    "ky": "^0.33.3",
+    "nanoid": "^4.0.2",
+    "next": "^13.5.2",
+    "postcss": "^8.4.30",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.3.3",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
-    "@types/node": "^12.12.21",
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
-    "discord-api-types": "^0.18.0",
-    "typescript": "^4.2.4"
+    "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
+    "@types/node": "^20.5.1",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "eslint": "^8.47.0",
+    "eslint-config-next": "^13.4.19",
+    "prettier": "^3.0.2",
+    "prettier-plugin-tailwindcss": "^0.5.4",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
   },
   "license": "MIT",
-  "description": "Simple discord bot using NextJS and serverless webhook handler for slash commands.",
+  "description": "Discord bot template using Next.js that runs at the edge. Uses Discord interactions webhooks to receive commands.",
   "main": "index.js",
   "author": "Jeff Huang"
 }
