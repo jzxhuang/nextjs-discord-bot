@@ -20,6 +20,13 @@ export const runtime = "edge"
 
 // Your public key can be found on your application in the Developer Portal
 const DISCORD_APP_PUBLIC_KEY = process.env.DISCORD_APP_PUBLIC_KEY
+const ROOT_URL = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : process.env.ROOT_URL || "http://localhost:3000"
+
+function capitalizeFirstLetter(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
 
 /**
  * Handle Discord interactions. Discord will send interactions to this endpoint.
@@ -57,6 +64,80 @@ export async function POST(request: Request) {
             flags: MessageFlags.Ephemeral,
           },
         })
+
+      case commands.pokemon.name:
+        if (!interaction.data.options || interaction.data.options?.length < 1) {
+          return NextResponse.json({
+            type: InteractionResponseType.ChannelMessageWithSource,
+            data: {
+              content: "Oops! Please enter a Pokemon name or Pokedex number.",
+              flags: MessageFlags.Ephemeral,
+            },
+          })
+        }
+
+        const option = interaction.data.options[0]
+        // @ts-ignore
+        const idOrName = String(option.value).toLowerCase()
+
+        try {
+          const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${idOrName}`).then((res) => {
+            return res.json()
+          })
+          const types = pokemon.types.reduce(
+            (prev: string[], curr: { type: { name: string } }) => [...prev, capitalizeFirstLetter(curr.type.name)],
+            []
+          )
+
+          const r = {
+            type: InteractionResponseType.ChannelMessageWithSource,
+            data: {
+              embeds: [
+                {
+                  title: capitalizeFirstLetter(pokemon.name),
+                  image: {
+                    url: `${ROOT_URL}/api/pokemon/${idOrName}`,
+                  },
+                  fields: [
+                    {
+                      name: "Pokedex",
+                      value: `#${String(pokemon.id).padStart(3, "0")}`,
+                    },
+                    {
+                      name: "Type",
+                      value: types.join("/"),
+                    },
+                  ],
+                },
+              ],
+            },
+          }
+          return NextResponse.json({
+            type: InteractionResponseType.ChannelMessageWithSource,
+            data: {
+              embeds: [
+                {
+                  title: capitalizeFirstLetter(pokemon.name),
+                  image: {
+                    url: `${ROOT_URL}/api/pokemon/${idOrName}`,
+                  },
+                  fields: [
+                    {
+                      name: "Pokedex",
+                      value: `#${String(pokemon.id).padStart(3, "0")}`,
+                    },
+                    {
+                      name: "Type",
+                      value: types.join("/"),
+                    },
+                  ],
+                },
+              ],
+            },
+          })
+        } catch (error) {
+          throw new Error("Something went wrong :(")
+        }
 
       case commands.randompic.name:
         const { options } = interaction.data

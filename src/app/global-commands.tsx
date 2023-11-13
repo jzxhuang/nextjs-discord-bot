@@ -1,8 +1,13 @@
-import { getGlobalCommands } from "@/discord/client"
+import { APIApplication } from "discord-api-types/v10"
 
 export async function GlobalCommands() {
   try {
-    const commands = await getGlobalCommands({ appId: process.env.DISCORD_APP_ID! })
+    const commands = await fetch(`https://discord.com/api/v8/applications/${process.env.DISCORD_APP_ID}/commands`, {
+      headers: {
+        Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+      },
+      next: { revalidate: 60 * 5 },
+    }).then((res) => res.json() as Promise<APIApplication[]>)
     if (commands.length <= 0) {
       return <p className="pt-6">No commands found :(</p>
     }

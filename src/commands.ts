@@ -5,17 +5,35 @@
  * @see https://discord.com/developers/docs/interactions/application-commands#registering-a-command
  */
 
-import { ApplicationCommandType } from "discord-api-types/v10"
+import { ApplicationCommandOptionType, ApplicationCommandType } from "discord-api-types/v10"
 
-export const PING_COMMAND = {
+const PING_COMMAND = {
   name: "ping",
   description: "Ping pong! I'll respond with pong.",
 } as const
 
-export const INVITE_COMMAND = {
+const INVITE_COMMAND = {
   name: "invite",
   description: "Get an invite link to add this bot to your server",
 } as const
+
+const POKEMON_COMMAND = {
+  name: "pokemon",
+  description: "Get a preview of a Pokemon by name or Pokedex number",
+  options: [
+    {
+      name: "number",
+      description: "Enter Pokedex number",
+      min_value: 1,
+      type: ApplicationCommandOptionType.Integer,
+    },
+    {
+      name: "name",
+      description: "Enter Pokemon name",
+      type: ApplicationCommandOptionType.String,
+    },
+  ],
+}
 
 export type RandomPicType = "cat" | "dog" | "picsum"
 export const RANDOM_PIC_COMMAND = {
@@ -39,5 +57,6 @@ export const RANDOM_PIC_COMMAND = {
 export const commands = {
   ping: PING_COMMAND,
   invite: INVITE_COMMAND,
+  pokemon: POKEMON_COMMAND,
   randompic: RANDOM_PIC_COMMAND,
 } as const
