@@ -1,23 +1,27 @@
-# NextBot: Next.js Discord Bot Template that runs in the Edge Runtime
+# NextBot: Next.js Discord Bot Template that runs 100% at the Edge Runtime
 
-NextBot is a template for building and deploying a Discord bot with Next.js. It runs 100% in the edge runtime so you get
-lightning-fast responses and zero cold starts. It uses Discord interactions webhooks to receive and reply to commands.
+NextBot is a template for building and deploying a Discord bot with Next.js. It's configured to run fully at the edge,
+delivering lightning-fast responses with no cold starts.
 
 ![Demo GIF](docs/demo.gif)
 
 - Runs at the edge: Lightning-fast responses, no cold start.
 - Free & easy to deploy: Deploy to Vercel in seconds at no cost. No need to host a server or VM to run your bot! Don't
   bother with Heroku, EC2, etc.
-- Easy to extend: Since the bot is built on Next.js, you can easily build an accompanying webapp in the same repo.
+- Extensible and scalable: Leverage Next.js to pair a dashboard for your bot, or use features like `next/og` to generate
+  dynamic images!
 
 ## Try it out
 
-Join https://discord.gg/NmXuqGgkb3 to try out a demo of NextBot. Type one of these slash commands into the general
-channel:
+Join https://discord.gg/NmXuqGgkb3 to try out NextBot. Here are some commands I've added to the demo bot as an example
+of what you can build!
 
-- `/ping`
-- `/invite`
-- `/randompic`
+| Command      | Description                                                                                                                    |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `/pokemon`   | Returns an image that contains a Pokemon's sprite, name, and pokedex number. The image is generated dynamically using next/og. |
+| `/ping`      | Ping pong! The bot will respond with "Pong".                                                                                   |
+| `/invite`    | Returns a link to invite the bot to your own server.                                                                           |
+| `/randompic` | Returns a random picture.                                                                                                      |
 
 Or add NextBot to your own server with this link:
 https://discord.com/api/oauth2/authorize?client_id=837427503059435530&permissions=2147485696&scope=bot%20applications.commands
@@ -26,14 +30,16 @@ You can also send slash commands through DM to the bot as long as you're in a mu
 
 ## Development
 
-Node.js 18+ is required.
+See https://nextjs.org/docs/getting-started/installation for minimum requirements.
 
 ### Setup
+
+These steps only need to be done once.
 
 - Clone the repo. This is a
   [template repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
   so you can click the green "Use this template" button on GitHub to create your own repo!
-  - Run `yarn` to install dependencies.
+- Run `yarn` to install dependencies.
 - [Create a new Discord application](https://discord.com/developers/applications).
   - In the `Bot` settings of your Discord application, enable the `Message Content` intent.
 - Fill out environment variables:
@@ -57,6 +63,7 @@ For this guide, I'll be using ngrok.
 - In the Discord app settings, set `Interactions Endpoint URL` to `<YOUR_PUBLIC_TUNNELED_NGROK_URL>/api/interactions`.
   Make sure to use the `https` URL!
 - Save changes in the Discord app settings.
+- Set the value of `ROOT_URL` in `.env.local` to your ngrok URL.
 
 In order to verify your interactions endpoint URL, Discord will send a `PING` message to your bot, and the bot should
 reply with a PONG (see `src/pages/api/interactions.ts`). If this is successful, your bot is ready to go!
@@ -104,26 +111,33 @@ commands!
 
 - `src/app/api/interactions/route.ts`: This is the main route handler for the Interactions Endpoint. It receives
   interactions from Discord and handles them accordingly.
-- `src/discord/verify-incoming-request.ts`: Helper functions to verify incoming requests from Discord, as outlined in https://discord.com/developers/docs/interactions/receiving-and-responding#security-and-authorization.
+- `src/discord/verify-incoming-request.ts`: Helper functions to verify incoming requests from Discord, as outlined in
+  https://discord.com/developers/docs/interactions/receiving-and-responding#security-and-authorization.
 - `src/app/page.tsx`: A basic web page. This could be your admin portal or whatever you'd like!
 
 ## Why Next.js (instead of Express, serverless, or Cloudflare Workers)?
 
-NextBot leverages Next.js 13
-[Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) to receive and respond to
-interactions. But why Next.js instead of something like Express or serverless (AWS Lambda)?
+NextBot leverages Next.js [Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers)
+to receive and respond to interactions. Why Next.js instead of something like Express or serverless (AWS Lambda)?
 
-- Next.js is free and effortless to deploy on Vercel. Don't bother with trying to host your Express server
-- Compared to serverless, edge is faster (no cold start) and cheaper (Edge Runtimes have more generous free tiers and
-  are cheaper per request)
+- Next.js is free and easy to deploy on Vercel. Don't bother with managing VMs, EC2 instances, etc.
+- Compared to serverless (i.e. AWS Lambda), edge is faster (no cold start) and cheaper (edge has a more generous free
+  tiers and is cheaper per request)
+- Next.js is a full web-app framework, making it easy to build an accompanying web app to go along with your Discord
+  app. An example of this can be seen in `src/app/page.tsx`.
+- You can use Next.js features like [@vercel/og](https://vercel.com/docs/functions/edge-functions/og-image-generation).
+  The `/pokemon` command demonstrates this! It generates a dynamic image at runtime, and responses are cached at the
+  edge.
+- Vercel scales out very effectively for a more complex Discord bot, for example if you need to add analytics, logging,
+  auth, etc.
 
-A better comparison would be hosting a Discord bot on Cloudflare Workers, as shown in this
-[official Discord tutorial](https://discord.com/developers/docs/tutorials/hosting-on-cloudflare-workers). The Next.js
-edge runtime is built on Cloudflare Workers! Still, I think Next.js has some notable benefits:
+Note: Discord's official docs include a
+[full tutorial for hosting a Discord bot on Cloudflare Workers](https://discord.com/developers/docs/tutorials/hosting-on-cloudflare-workers).
+This is the best comparison to NextBot: Next's edge runtime is built on Cloudflare Workers!
 
-- Next.js has the advantage of being a full web-app framework, making it easy to build an accompanying web app to go
-  along with your Discord app!
-- Deploying on Vercel is not only simple, but it also scales out very effectively if you need to build a more complex
-  app (analytics, logging, integrations, etc.)
-  - You can use Next.js/Vercel features like [Dynamic Image Generation](NextBot is a template for building and deploying a Discord bot with Next.js. It runs 100% in the edge runtime so you get
-lightning-fast responses and zero cold starts).
+In the `/pokemon` command, I demonstrate some of the powerful Next.js features that can use!
+
+- The image in the response is generated dynamically using
+  [next/og](https://nextjs.org/docs/app/building-your-application/optimizing/metadata#dynamic-image-generation).
+- Requests to [PokeAPI](https://pokeapi.co/) are [cached automatically](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating) by Next.js
+- The dynamic image itself is also cached, so it only needs to be generated once.

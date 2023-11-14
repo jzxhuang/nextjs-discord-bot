@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { GlobalCommands } from "./global-commands"
 
 export default async function Page() {
@@ -33,7 +34,9 @@ export default async function Page() {
           This is an example of an admin portal might look like. It leverages RSCs to fetch the Slash commands
           associated with the Discord bot!
         </p>
-        <GlobalCommands />
+        <Suspense fallback={null}>
+          <GlobalCommands />
+        </Suspense>
       </section>
     </main>
   )
