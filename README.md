@@ -1,4 +1,4 @@
-# NextBot: Next.js Discord Bot Template that runs 100% at the Edge Runtime
+# NextBot: Next.js Discord Bot Template that runs 100% at the Edge
 
 NextBot is a template for building and deploying a Discord bot with Next.js. It's configured to run fully at the edge,
 delivering lightning-fast responses with no cold starts.
