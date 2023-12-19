@@ -12,19 +12,9 @@
  */
 
 import { commands } from "@/commands"
-import dotenv from "dotenv"
+import { env } from "./env.mjs"
 
-dotenv.config({ path: ".env.local" })
-const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN
-const DISCORD_APP_ID = process.env.DISCORD_APP_ID
-if (!DISCORD_BOT_TOKEN) {
-  throw new Error("The DISCORD_BOT_TOKEN environment variable is required.")
-}
-if (!DISCORD_APP_ID) {
-  throw new Error("The DISCORD_APP_ID environment variable is required.")
-}
-
-const URL = `https://discord.com/api/v10/applications/${DISCORD_APP_ID}/commands`
+const URL = `https://discord.com/api/v10/applications/${env.DISCORD_APP_ID}/commands`
 
 /**
  * Register all commands globally.  This can take o(minutes), so wait until
@@ -36,7 +26,7 @@ async function main() {
   const response = await fetch(URL, {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+      Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
     },
     method: "PUT",
     body: JSON.stringify(Object.values(commands)),

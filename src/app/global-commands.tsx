@@ -1,10 +1,11 @@
+import { env } from "@/env.mjs"
 import { APIApplication } from "discord-api-types/v10"
 
 export async function GlobalCommands() {
   try {
-    const commands = await fetch(`https://discord.com/api/v8/applications/${process.env.DISCORD_APP_ID}/commands`, {
+    const commands = await fetch(`https://discord.com/api/v8/applications/${env.DISCORD_APP_ID}/commands`, {
       headers: {
-        Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+        Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
       },
       next: { revalidate: 60 * 5 },
     }).then((res) => res.json() as Promise<APIApplication[]>)
