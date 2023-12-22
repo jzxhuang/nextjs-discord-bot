@@ -1,5 +1,6 @@
 import { commands, RandomPicType } from "@/commands"
 import { verifyInteractionRequest } from "@/discord/verify-incoming-request"
+import { env } from "@/env.mjs"
 import {
   APIInteractionDataOptionBase,
   ApplicationCommandOptionType,
@@ -18,11 +19,7 @@ import { getRandomPic } from "./random-pic"
  */
 export const runtime = "edge"
 
-// Your public key can be found on your application in the Developer Portal
-const DISCORD_APP_PUBLIC_KEY = process.env.DISCORD_APP_PUBLIC_KEY
-const ROOT_URL = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : process.env.ROOT_URL || "http://localhost:3000"
+const ROOT_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : env.ROOT_URL
 
 function capitalizeFirstLetter(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1)
@@ -34,7 +31,7 @@ function capitalizeFirstLetter(s: string) {
  * @see https://discord.com/developers/docs/interactions/receiving-and-responding#receiving-an-interaction
  */
 export async function POST(request: Request) {
-  const verifyResult = await verifyInteractionRequest(request, DISCORD_APP_PUBLIC_KEY!)
+  const verifyResult = await verifyInteractionRequest(request, env.DISCORD_APP_PUBLIC_KEY)
   if (!verifyResult.isValid || !verifyResult.interaction) {
     return new NextResponse("Invalid request", { status: 401 })
   }
@@ -60,7 +57,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           type: InteractionResponseType.ChannelMessageWithSource,
           data: {
-            content: `Click this link to add NextBot to your server: https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_APP_ID}&permissions=2147485696&scope=bot%20applications.commands`,
+            content: `Click this link to add NextBot to your server: https://discord.com/api/oauth2/authorize?client_id=${env.DISCORD_APP_ID}&permissions=2147485696&scope=bot%20applications.commands`,
             flags: MessageFlags.Ephemeral,
           },
         })
@@ -89,29 +86,6 @@ export async function POST(request: Request) {
             []
           )
 
-          const r = {
-            type: InteractionResponseType.ChannelMessageWithSource,
-            data: {
-              embeds: [
-                {
-                  title: capitalizeFirstLetter(pokemon.name),
-                  image: {
-                    url: `${ROOT_URL}/api/pokemon/${idOrName}`,
-                  },
-                  fields: [
-                    {
-                      name: "Pokedex",
-                      value: `#${String(pokemon.id).padStart(3, "0")}`,
-                    },
-                    {
-                      name: "Type",
-                      value: types.join("/"),
-                    },
-                  ],
-                },
-              ],
-            },
-          }
           return NextResponse.json({
             type: InteractionResponseType.ChannelMessageWithSource,
             data: {
