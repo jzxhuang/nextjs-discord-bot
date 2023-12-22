@@ -86,29 +86,6 @@ export async function POST(request: Request) {
             []
           )
 
-          const r = {
-            type: InteractionResponseType.ChannelMessageWithSource,
-            data: {
-              embeds: [
-                {
-                  title: capitalizeFirstLetter(pokemon.name),
-                  image: {
-                    url: `${ROOT_URL}/api/pokemon/${idOrName}`,
-                  },
-                  fields: [
-                    {
-                      name: "Pokedex",
-                      value: `#${String(pokemon.id).padStart(3, "0")}`,
-                    },
-                    {
-                      name: "Type",
-                      value: types.join("/"),
-                    },
-                  ],
-                },
-              ],
-            },
-          }
           return NextResponse.json({
             type: InteractionResponseType.ChannelMessageWithSource,
             data: {
