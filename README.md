@@ -1,24 +1,23 @@
-# NextBot: Next.js Discord Bot Template that runs 100% at the Edge
-
-NextBot is a template for building and deploying a Discord bot with Next.js. It's configured to run fully at the edge,
-delivering lightning-fast responses with no cold starts.
+# NextBot: Next.js Discord Bot Template
 
 ![Demo GIF](docs/demo.gif)
 
-- Runs at the edge: Lightning-fast responses, no cold start.
+NextBot is a Discord bot template built with Next.js and configured to run at the Edge. It's designed to be simple to setup and deploy — you should be able to get started with NextBot in <5 minutes!
+
+- Runs in Edge Runtime: Lightning-fast responses with no cold starts, plus more generous free tier than serverless.
 - Free & easy to deploy: Deploy to Vercel in seconds at no cost. No need to host a server or VM to run your bot! Don't
   bother with Heroku, EC2, etc.
-- Extensible and scalable: Leverage Next.js to pair a dashboard for your bot, or use features like `next/og` to generate
+- Extensible and scalable: Leverage Next.js to create a corresponding web app for your bot, or use features like [next/og](https://vercel.com/docs/functions/edge-functions/og-image-generation) to generate
   dynamic images!
 
 ## Try it out
 
-Join https://discord.gg/NmXuqGgkb3 to try out NextBot. Here are some commands I've added to the demo bot as an example
+Join the [Demo Server](https://discord.gg/NmXuqGgkb3) to try out NextBot. Here are some commands I've added to the demo bot as an example
 of what you can build!
 
 | Command      | Description                                                                                                                    |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| `/pokemon`   | Returns an image that contains a Pokemon's sprite, name, and pokedex number. The image is generated dynamically using next/og. |
+| `/pokemon`   | Returns an image that contains a Pokemon's sprite, name, and pokedex number. The image is generated dynamically using `next/og`. |
 | `/ping`      | Ping pong! The bot will respond with "Pong".                                                                                   |
 | `/invite`    | Returns a link to invite the bot to your own server.                                                                           |
 | `/randompic` | Returns a random picture.                                                                                                      |
@@ -26,7 +25,16 @@ of what you can build!
 Or add NextBot to your own server with this link:
 https://discord.com/api/oauth2/authorize?client_id=837427503059435530&permissions=2147485696&scope=bot%20applications.commands
 
-You can also send slash commands through DM to the bot as long as you're in a mutual server with the it!
+You can also send slash commands to the bot via DM as long as you're in a mutual server with the it!
+
+- [Development](#development)
+  - [Setup](#setup)
+  - [Local Development](#local-development)
+- [Deploy to Production](#deploy-to-production)
+- [How It Works](#how-it-works)
+  - [File Structure](#file-structure)
+- [Why Next.js (instead of Express, serverless, or Cloudflare Workers)?](#why-nextjs-instead-of-express-serverless-or-cloudflare-workers)
+
 
 ## Development
 
@@ -82,15 +90,18 @@ After adding the bot to a server, try out one of the slash commands like `/ping`
 Note: whenever you terminate/restart your ngrok tunnel, you'll need to update the `Interactions Endpoint URL` in the
 Discord app settings accordingly.
 
-## Deploy to Production
+## Deployment
 
-This project is designed to be deployed on Vercel. I recommend that you create a new Discord Application for production!
+This project is designed to be deployed on Vercel. I recommend that you create a new Discord Application for your production application! This makes it easier to test local changes.
+
 Here are some things you should remember to do when deploying:
 
 - Set the environment variables in Vercel accordingly.
-- You can still use `yarn register-commands` to register commands for your production bot, as long as you update your
-  `.env.local` file with the correct values.
-- You should set `<YOUR_VERCEL_URL>/api/interactions` as the `Interactions Endpoint URL` in your prod Discord app.
+- Set `<YOUR_VERCEL_URL>/api/interactions` as the `Interactions Endpoint URL` in your production Discord app.
+- Register commands for the production bot. You can still use `yarn register-commands`, as long as you temporarily update
+  `.env.local` on your local machine with the correct values.
+
+Of course, you don't have to use Vercel. Any platform that supports Next.js should work!
 
 ## How It Works
 
@@ -118,16 +129,15 @@ commands!
 ## Why Next.js (instead of Express, serverless, or Cloudflare Workers)?
 
 NextBot leverages Next.js [Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers)
-to receive and respond to interactions. Why Next.js instead of something like Express or serverless (AWS Lambda)?
+to receive and respond to interactions. But why Next.js specifically — couldn't we host a typical node app on AWS Lambda?
 
-- Next.js is free and easy to deploy on Vercel. Don't bother with managing VMs, EC2 instances, etc.
-- Compared to serverless (i.e. AWS Lambda), edge is faster (no cold start) and cheaper (edge has a more generous free
-  tiers and is cheaper per request)
 - Next.js is a full web-app framework, making it easy to build an accompanying web app to go along with your Discord
   app. An example of this can be seen in `src/app/page.tsx`.
 - You can use Next.js features like [@vercel/og](https://vercel.com/docs/functions/edge-functions/og-image-generation).
   The `/pokemon` command demonstrates this! It generates a dynamic image at runtime, and responses are cached at the
   edge.
+- Compared to serverless (i.e. AWS Lambda), edge is faster (no cold start) and cheaper (edge has a more generous free
+  tiers and is cheaper per request)
 - Vercel scales out very effectively for a more complex Discord bot, for example if you need to add analytics, logging,
   auth, etc.
 
